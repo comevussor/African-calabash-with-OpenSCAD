@@ -8,6 +8,8 @@ Il est difficile de saisir les enjeux de géométrie sphérique engagés dans la
 
 Porndouï est une représentation symbolique des ailes striées de l'épervier. On notera ici le jeu visuel avec des triangles sphériques équilatéraux trirectangles (dont les 3 angles sont droits).
 
+
+
 # African-calabash-with-OpenSCAD
 
 African heritage in history of mathematics is unfortunately poorly documented due to oral tradition. However, Denis-Pierre de Pedrals's "Antilopes et calebasses" (1948, never translated in english) gives some examples of calabashes decorations in Tchad. Though Pedrals's view is mostly artistic, Théophile Obenga, casted a new light on this topic in 1995, in "La géométrie égyptienne, Contribution de l'Afrique antique à la Mathématique mondiale" (Egyptian geometry, contribution of ancient Africa to world mathematics" freely available [here](https://play.google.com/books/reader?id=HCjECugfQegC&pg=GBS.PP1) : 
