@@ -6,7 +6,7 @@ Le patrimoine africain en histoire des mathématiques a malheureusement été pe
 
 Il est difficile de saisir les enjeux de géométrie sphérique engagés dans la décoration des calebasses sur la base d'une représentation plane. C'est pourquoi je veux les représenter en 3D, avec OpenSCAD pour qu'elles puissent être ensuite intégrées à des projets plus ambitieux.
 
-Porndouï est une représentation symbolique des ailes striées de l'épervier.
+Porndouï est une représentation symbolique des ailes striées de l'épervier. On notera ici le jeu visuel avec des triangles sphériques équilatéraux trirectangles (dont les 3 angles sont droits).
 
 # African-calabash-with-OpenSCAD
 
@@ -16,4 +16,4 @@ African heritage in history of mathematics is unfortunately poorly documented du
 
 It is quite difficult to apprehend the spherical geometry involved in calabashes decoration based on 2D representations. That is why I represented them in 3D, using OpenSCAD so that they can be later included in more ambitious projects.
 
-Porndouï is a symbolic representation of the striped hawk wings. 
+Porndouï is a symbolic representation of the striped hawk wings. There is a visual effect with spherical equilateral triangles that have 3 right angles.
