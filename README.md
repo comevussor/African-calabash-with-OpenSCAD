@@ -8,7 +8,7 @@ Il est difficile de saisir les enjeux de géométrie sphérique engagés dans la
 
 Porndouï est une représentation symbolique des ailes striées de l'épervier. On notera ici le jeu visuel avec des triangles sphériques équilatéraux trirectangles (dont les 3 angles sont droits).
 
-
+![porndoui_OpenSCAD](https://user-images.githubusercontent.com/56354596/70391589-13425a00-19d7-11ea-9da9-21b37b741cad.png)
 
 # African-calabash-with-OpenSCAD
 
