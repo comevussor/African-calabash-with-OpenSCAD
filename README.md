@@ -18,4 +18,4 @@ African heritage in history of mathematics is unfortunately poorly documented du
 
 It is quite difficult to apprehend the spherical geometry involved in calabashes decoration based on 2D representations. That is why I represented them in 3D, using OpenSCAD so that they can be later included in more ambitious projects.
 
-Porndouï is a symbolic representation of the striped hawk wings. There is a visual effect with spherical equilateral triangles that have 3 right angles.
+Porndouï is a symbolic representation of the striped hawk wings. There is a visual effect with spherical equilateral triangles that have 3 right angles.z
