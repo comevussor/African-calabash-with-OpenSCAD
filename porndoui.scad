@@ -1,106 +1,112 @@
-//n = nombre de triangles équilatéraux avec quarts de cercle
-n=3;
-echo(str("n=",n));
+// ***************** LES CONSTANTES DECLAREES **************************************
 
-//les triangles équilatéraux sont indexés k :
-// 0 pour la grande croix
-//1 à n-1 pour les triangles avec quart de cercle
-//n pour le triangle plein
-
-//r0 = rayon de la sphère initiale
-r0=100;
-r0plus = 1.1*r0;
-echo(str("r0=",r0));
-
-//ep = épaisseur de la sphère
-ep = r0/50;
-echo(str("ep=",ep));
-
-//$fs = min fragment size for a circle
-$fs=1;
-echo(str("$fs=",$fs));
-
-//$fa = min angle fragment size for a circle
-$fa=5;
-//$fa=2; //1min 36s
-
-//r1 = rapport espacement/largeur trait des triangles équilatéraux
-r1=3;
-echo(str("r1=",r1));
-
-//r2 = rapport largeur trait grande croix / largeur trait triangles équilatéraux
-r2=1.5;
-echo(str("r2=",r2));
-
-//r3 = rapport largeur trait petit carré au fond / largeur trait triangles équilatéraux
-r3=1;
-echo(str("r3=",r3));
-
-//r4 = rapport largeur "trait" triangle équilatéral plein central / largeur trait triangle équilatéral
-r4=3;
-echo(str("r4=",r4));
-
-//r5 = rapport rayon 1/4 cercle placé à l'angle des triangles équilatéraux / largeur trait triangle équilatéral
-r5=2;
-echo(str("r5=",r5));
-
-//ep1= épaisseur d'un demi-cube intersectant
+// Constantes numériques utilitaires
 sq3 = sqrt(3);
-ep1 = r0/sq3/ (n+(n+1)*r1+r2+r4);
-echo(str("ep1=",ep1));
 
-//épaisseur d'un demi-cube en fonction de k
-function dcub_ep(k) = (k==0) ? (ep1*r2) :  (k==n+1) ? (ep1*r4) : ep1  ;
+// Toute la calebasse est d'abord construite sur un huitième de sphère puis reproduit 4 fois pour faire la demi-shpère. A propos des triangles équilatéraux : on peut regarder chaque triangle équilatéral comme la différence entre 2 cubes dont le coin est entré dans un huitième de sphère. Ces deux cubes sont identiques mais translatés radialement selon un rayon qui va du centre de la sphère au centre de gravité du triangle plein central. Dans la suite, on appelle "épaisseur des traits des triangles équilatéraux la norme de cette translation.
 
-//position d'un demi-cube intersectant en fonction de k
+// Nombre de triangles équilatéraux avec quarts de cercle.
+n=3;
+
+// Les triangles équilatéraux sont indexés par k :
+// 0 pour la grande croix
+// 1 à n-1 pour les triangles équilatéraux (ceux avec le petit arc de cercle)
+// n pour le triangle plein.
+
+// Rayon de la sphère initiale.
+r0=100;
+
+// Coefficient de détermination de l'épaisseur de la sphère (multiplie le rayon).
+c_ep = 1 / 50;
+
+// Coefficient multiplicateur de r0 indicant le grand rayon utilisé pour créer les blocs noirs avant intersection avec le huitième de sphère.
+c1 = 1.1;
+
+// Coefficient multiplicateur de r0 indicant le petit rayon utilisé pour créer les blocs noirs avant intersection avec le huitième de sphère.
+c2 = 0.9;
+
+// Taille minimale d'un fragment sur la sphère.
+$fs = 1;
+
+//Nombre minimum de degrés pour un fragment de cercle.
+$fa = 5;
+//$fs = 1; $fa=2; // temps d'exécution 4min 
+
+// Les 4 rapports à l'épaisseur des triangles équilatéraux qui ensemble déterminent l'épaisseur des traits.
+// Rapport entre l'espacement des traits des triangles équilatéraux et leur largeur.
+r1 = 3;
+
+// Rapport entre la largeur du trait de la grande croix et la largeur du trait des triangles équilatéraux.
+r2 = 1.5;
+
+// Rapport entre la largeur du trait du petit carré au fond et la largeur du trait des triangles équilatéraux
+r3=1;
+
+// Rapport entre la largeur du "trait" du triangle équilatéral plein central et la largeur du trait des triangles équilatéraux.
+r4=3;
+
+// Rapport entre le rayon de l'arc de cercle placé à l'angle des triangles équilatéraux et la largeur du trait des triangles équilatéraux.
+r5=2;
+
+// ***************** LES CONSTANTES DEDUITES **************************************
+
+// Rayon agrandi pour créer les blocs noirs avant intersection avec le huitième de sphère.
+r0plus = c1 * r0;
+
+// Rayon diminué pour créer les blocs noirs avant intersection avec le huitième de sphère.
+r0moins = c2 * r0;
+
+// Epaisseur de la sphère.
+ep = r0 * c_ep;
+
+// Norme de la translation d'un cube intersectant la sphère pour créer la largeur du trait des triangles équilatéraux.
+ep1 = r0 / sq3 / (n + (n + 1) * r1 + r2 + r4);
+
+// Rayon d'un 1/4 cylindre servant à faire les coins.
+qcyl_ray = r5 * ep1;
+
+// Translation du trait du petit carré du fond selon les aces x et y pour atteindre sa position finale.
+encoch_pos = (r2 + r1 / 2)* ep1 ;
+
+// ***************** LES FONCTIONS **************************************
+
+// Distance entre un cube intersectant la sphère pour le tracé extérieur d'un triangle équilatéral et chacun des trois plans du repère, en fonction de k.
 function dcub_pos(k) = (k==0) ? 0 : ( ep1* (r2 + r1 + (k-1)*(1+r1)) ) ;
 
+// Distance supplémentaire à dcub_pos pour la translation permettant le tracé intérieur.
+function dcub_ep(k) = (k==0) ? (ep1*r2) :  (k==n+1) ? (ep1*r4) : ep1  ;
+
+// Enumérer les épaisseurs de traits et les positions pour l'utilisateur.
 for (k = [0:1:n+1])
 {
     echo(str("k=0 : dcub_ep = ", dcub_ep(k), " , dcub_pos = ", dcub_pos(k)));
 }
 
-//rayon d'un 1/4 cylindre servant à faire les coins
-qcyl_ray = r5 * ep1;
-
-//calculer l'angle depuis l'axe a (1 pour x, 2 pour y, 3 pour z), pour atteindre le coin k 
-//cet angle est à appliquer 2 fois (selon les deux autres axes)
-function ang1(k) = asin(dcub_pos(k)/r0);
-
-//fonction caractéristique des axes à utiliser pour la rotation
-//retourne 1 si l'axe test est concerné pour la rotation qui va au coin a
-function axis(a, test) = (test==a) ? 0:1;
-
-//axe du coin à atteindre (a)
-function corner_axis(a) = [for (test = [1:1:3]) (a==test) ? 1:0];
-
-//coordonnées du coin à atteindre (k, a)
-function corner(k,a)=
+// Coordonnées du sommet intérieur du triangle équilatéral k le plus proche de l'axe a
+function corner(k, a)=
     [
-        let(d = dcub_pos(k)+dcub_ep(k))
+        let(d = dcub_pos(k) + dcub_ep(k))
         for (test = [1:1:3])
-            (a==test) ? sqrt( pow(r0,2) - 2*pow(d,2)) : d 
+            (a==test) ? sqrt( pow(r0, 2) - 2 * pow(d, 2)) : d 
     ];
+
+// Conversion du repérage d'un axe d'un nombre décimal à un nombre binaire. Exemple : l'axe 2 (soit l'axe y) devient (0,1,0).
+function corner_axis(a) = [for (test = [1:1:3]) (a==test) ? 1:0];
     
-//axe de rotation pour atteindre le coin
-function corner_rotaxis(k,a) = cross(corner_axis(a),corner(k,a));
+// Axe de rotation pour atteindre le sommet du triangle k depuis l'axe a. C'est le produit vectoriel entre l'axe et le sommet.
+function corner_rotaxis(k, a) = cross(corner_axis(a), corner(k, a));
         
-//angle de rotation pour atteindre le coin
-function corner_rotang(k,a) = acos(corner_axis(a)*corner(k,a)/norm(corner_axis(a))/norm(corner(k,a)));
+// Angle de rotation pour atteindre le coin. On le trouve à partir du produit scalaire entre l'axe et le sommet.
+function corner_rotang(k, a) = 
+    acos(corner_axis(a) * corner(k, a) / norm(corner_axis(a)) / norm(corner(k, a)));
 
-//rotation d'un 1/4 cylindre pour prépositionner sur l'axe concerné en fonction de a (retourne une liste d'angles)
+//  Angles de rotation d'un quart de cylindre à prépositionner sur l'axe a selon chacun des axes.
 function qcyl_prepos(a) =
-        (a==1) ? [90, 0, 90] : (a==2) ? [0,-90,-90] : [0,0,0] ;
-        
-//dernière encoche (épaisseur r3*ep1)
-//translation après prépositionnement
-encoch_pos = (r2 + r1 / 2)* ep1 ;
-        
-function encoch_trans() = [encoch_pos, encoch_pos, 0];
+    (a==1) ? [90, 0, 90] : (a==2) ? [0,-90,-90] : [0,0,0] ;
+    
+// ***************** LES MODULES **************************************
 
-
-//Modules
-//créer la 1/8 sphère initiale
+// Créer le huitième de sphère initial.
 module sphi()
 {   
     difference()
@@ -108,21 +114,21 @@ module sphi()
             difference()
             {
                 sphere(r0);
-                sphere(r0-ep);
+                sphere(r0 - ep);
             }
             
             difference()
             {
-                cube(2*r0plus, center=true);
+                cube(2 * r0plus, center = true);
                 cube(r0plus);
             }
         }
     }
     
-//créer 1/2 cube intersectant en fonction de k
+// Créer le volume dont l'intersection avec le huitième de sphère constitue un triangle équilatéral. Il s'agit de la différence entre 2 cubes translatés l'un de l'autre.
 module dcube(k)
     {
-        let (epc = dcub_ep(k))
+        epc = dcub_ep(k) ;
         difference()
         {
             cube(r0plus);
@@ -130,7 +136,7 @@ module dcube(k)
         }
     }    
 
-//positionner 1/2 cube intersectant en fonctiond de k
+// Créer le volumne associé à un triangle équilatéral. Positionner le volume (dcube en l'occurrence) et l'intersecter avec la calebasse.
 module dcube_mv(k)
     {
         mvt = dcub_pos(k);
@@ -140,43 +146,42 @@ module dcube_mv(k)
             difference()
             {
                 sphere(r0plus);
-                sphere(r0*0.9);
+                sphere(r0moins); 
             }
         }
     }
 
-//créer et positionner la sérier de n+2 1/2 cubes
+// Créer les n+2 triangles équilatéraux.
 module dcube_series()
     {
         for (k = [0:1:n+1])
             dcube_mv(k) dcube(k);
     }
 
-//créer 1/4 cylindre intersectant
+// Créer un tronçon de quart de cylindre.
 module qcyl() 
     {   
     difference()
         {
-            cylinder(h=2*r0plus, r=qcyl_ray, center=true);
+            cylinder(h = 2 * r0plus, r = qcyl_ray, center = true);
             
             difference()
             {
-                cube(3*r0plus, center=true);
+                cube(3 * r0plus, center = true);
                 cube(r0plus);
             }
         }
     }
     
-//positionner 1/4 cylindre intersectant en fonctiond de k et a
+// Positionner le quart de cylindre produit par qcyl en fonction de k (le triangle) et a (l'axe le plus proche).
 module qcyl_mv(k,a)
-    {
-        
-        rotate(corner_rotang(k,a),corner_rotaxis(k,a))
+    {        
+        rotate(corner_rotang(k, a), corner_rotaxis(k, a))
         rotate(qcyl_prepos(a))
         children();
     }
 
-//créer et positionner la série de 1/4 cylindres
+// Créer et positionner la série de tous les quarts de cylindres.
 module qcyl_series()
     {
         for(k = [1:1:n])
@@ -184,30 +189,29 @@ module qcyl_series()
                 qcyl_mv(k,a) qcyl();
     }
 
-
-
-
-//créer le bloc pour l'encoche
+// Créer le bloc pour le trait du petit carré au sommet.
 module encoche()
     {
-        translate([0,0,r0plus/2]) rotate(-45) cube([5*encoch_pos, r3*ep1, r0plus], center = true);
+        translate([0, 0, r0plus / 2]) 
+            rotate(-45) 
+                cube([5 * encoch_pos, r3 * ep1, r0plus], center = true);
     }
     
-//positionner le bloc pour l'encoche
+// Positionner le bloc pour le trait du petit carré au sommet, créé par encoche.
 module encoche_pos()
     {
-        translate(encoch_trans()) children();
+        translate([encoch_pos, encoch_pos, 0]) children();
     }
     
     
-//créer et positionner l'encoche
+// Association des modules encoche_pos et encoche.
 module encoche_tot()
     {
         encoche_pos()
             encoche();
     }
     
-//intersecter qqch avec le 1/8 sphere
+// Intersecter un objet avec le huitième de sphere.
 module sphi_inter()
     {
         intersection()
@@ -217,7 +221,7 @@ module sphi_inter()
         }
     }
 
-//enlever qqch du 1/8 sphere
+// Faire la différence entre le huitième de shpère et un objet.
 module sphi_diff()
     {
         difference()
@@ -227,7 +231,7 @@ module sphi_diff()
         }
     }
 
-//duplicate 4 times around z
+// Dupliquer 4 fois autour de l'axe z.
 module duplic_around()
     {
         for (count = [0:1:3])
@@ -235,6 +239,7 @@ module duplic_around()
                 children();
     }
 
+// ***************** LA CALEBASSE **************************************
 
 duplic_around()
 {color("Black")
@@ -254,12 +259,12 @@ color ("Peru")
         }
     }
 
-color("Green")
-    {
-dcube_series();
-qcyl_series();
-encoche_tot();
-    }
+//color("Green")
+//    {
+//dcube_series();
+//qcyl_series();
+//encoche_tot();
+//    }
 
 
 
